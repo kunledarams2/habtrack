@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
           inputDecorationTheme: InputDecorationTheme(
               border: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white70))),fontFamily: "AvertaStd"),
+
       home: OnBoardScreen(),
     );
   }

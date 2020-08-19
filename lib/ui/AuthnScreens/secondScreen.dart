@@ -53,27 +53,17 @@ class _SecondAuthnScreenState extends State<SecondAuthnScreen> {
             SizedBox(
               height: 30,
             ),
-//          Container(
-//            width: 350,
-//            height: 50,
-//            child: RaisedButton(
-//              onPressed: () {},
-//              shape: RoundedRectangleBorder(
-//                  borderRadius: BorderRadius.circular(5)),
-//              child: Text("Continue"),
-//            ),
-//          ),
           ],
         ),
         bottomSheet: Container(
           color: Colors.blue[900],
-          height: 120,
+          height: 150,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-//            mainAxisAlignment: MainAxisAlignment.,
+//            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
+                margin: EdgeInsets.only(left: 40, right: 20),
                 child: Row(
                   children: <Widget>[
                     Radio(
@@ -91,9 +81,9 @@ class _SecondAuthnScreenState extends State<SecondAuthnScreen> {
                 ),
               ),
               Container(
-                width: 350,
+                width: 320,
                 height: 50,
-                margin: EdgeInsets.only(left: 20, right: 20),
+//                margin: EdgeInsets.only(left: 30, right: 30),
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.push(
@@ -111,7 +101,7 @@ class _SecondAuthnScreenState extends State<SecondAuthnScreen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 0,
               )
             ],
           ),

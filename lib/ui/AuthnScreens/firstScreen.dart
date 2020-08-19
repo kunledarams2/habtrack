@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habtrack/ui/AuthnScreens/secondScreen.dart';
+import 'package:habtrack/ui/DashBoard/settingScreen.dart';
 
 class AuthnFirstScreen extends StatefulWidget {
   @override

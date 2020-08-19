@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'DashBoard/addHabit.dart';
 import 'file:///C:/Development/habtrack/lib/ui/DashBoard/settingScreen.dart';
 
 import 'DashBoard/homeScreen.dart';
@@ -15,8 +16,11 @@ class _DashBoardState extends State<DashBoard> {
   int _page = 0;
   List<Widget> _children = [
     HomeScreen(),
-    SettingScreen(Colors.grey[300]),
+    AddHabit(),
+    SettingScreen(),
   ];
+
+  final PageController _pageController = PageController(initialPage: 0);
 
   void onTapNap(index) {
     setState(() {
@@ -27,59 +31,67 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[300],
-        bottomNavigationBar: Container(
-
-          height: 70,
-          width: 300,
-          decoration: BoxDecoration(shape: BoxShape.rectangle,
-          color: Colors.grey[300],
-            borderRadius: BorderRadius.only(topRight: Radius.circular(60), topLeft: Radius.circular(60))
-          ),
-          child: BottomNavigationBar(items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("")),
-            BottomNavigationBarItem(icon: Icon(Icons.settings), title: Text(""))
-
-          ],
-            backgroundColor: Colors.transparent
-
-
+        bottomNavigationBar: BottomAppBar(
+          color:Color(0xFFF6F5FC),
+          shape: CircularNotchedRectangle(),
+          child: Container(
+            height: 75,
+            decoration: BoxDecoration(shape: BoxShape.rectangle,
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(40),
+                    topLeft: Radius.circular(40))),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                    child: IconButton(
+                      icon: Icon(Icons.home),
+                      onPressed: () {
+                        setState(() {
+                          _pageController.jumpToPage(0);
+                        });
+                      },
+                    )),
+                Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.blue[900],
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                    child: IconButton(
+                      icon: Icon(Icons.add, color: Colors.white),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => AddHabit()));
+//                        setState(() {
+//                          _pageController.jumpToPage(1);
+//                        });
+                      },
+                    )),
+                Container(
+                    child: IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () {
+                        setState(() {
+                          _pageController.jumpToPage(1);
+                        });
+                      },
+                    ))
+              ],
           ),
         ),
-
-//        CurvedNavigationBar(
-//            key: _bottomNavigationKey,
-//            index: _page,
-//            height: 65,
-//            items: [
-//              Icon(
-//                Icons.home,
-//                size: 30,
-//              ),
-////              Icon(
-////                Icons.add,
-////                size: 30,
-////              ),
-//              Icon(
-//                Icons.settings,
-//                size: 25,
-//              )
-//            ],
-//            color: Colors.white,
-//            buttonBackgroundColor: Colors.white,
-//            backgroundColor: Colors.blue[700],
-////            animationCurve: Curves,
-////            animationDuration: Duration(milliseconds: 650),
-//            onTap: onTapNap),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue[900],
-          child: Icon(Icons.add),
-          onPressed: () {},
-          elevation: 2.0,
         ),
-        body: Container(
-          child: _children[_page],
-        ));
+
+        backgroundColor: Colors.grey[200],
+
+        body: PageView(controller: _pageController, children: <Widget>[
+          HomeScreen(),
+//          AddHabit(),
+          SettingScreen(),
+        ],)
+
+    );
   }
 }
