@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:habtrack/customizeFonts/my_flutter_app_icons.dart';
 
 class AddHabit extends StatefulWidget {
   @override
@@ -10,12 +11,24 @@ class AddHabit extends StatefulWidget {
 
 class _AddHabitState extends State<AddHabit> {
   List<IconData> _icons = [
+    MaterialIcons.access_alarm,
     FontAwesome5Solid.running,
     FontAwesomeIcons.balanceScale,
+    Ionicons.ios_trophy,
     MaterialIcons.headset,
     Icons.call_to_action,
-    MaterialIcons.laptop_mac,
+//    MaterialIcons.laptop_mac,
     Ionicons.ios_walk,
+
+  ];
+
+  List<IconData> _icon2 = [
+    FontAwesomeIcons.tint,
+    MyFlutterApp.piggy_bank,
+    FontAwesome.apple,
+    MaterialIcons.laptop_mac,
+    FontAwesomeIcons.bookReader,
+    FontAwesome5Solid.coffee,
 
   ];
   List<Color> _colors = [
@@ -148,8 +161,8 @@ class _AddHabitState extends State<AddHabit> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-                height: 40,
-                width: 40,
+                height: 30,
+                width: 30,
                 margin: EdgeInsets.only(left: 20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -157,7 +170,7 @@ class _AddHabitState extends State<AddHabit> {
                 child: IconButton(
                     icon: Icon(
                       Icons.remove,
-                      color: Color(0xFF005df2),
+                      color: Color(0xFF005df2),size: 15.0,
 
                     ),
                     onPressed: () {})),
@@ -166,8 +179,8 @@ class _AddHabitState extends State<AddHabit> {
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
             Container(
-                height: 40,
-                width: 40,
+                height: 30,
+                width: 30,
                 margin: EdgeInsets.only(right: 20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -175,7 +188,7 @@ class _AddHabitState extends State<AddHabit> {
                 child: IconButton(
                     icon: Icon(
                       Icons.add,
-                      color: Color(0xFF005df2),
+                      color: Color(0xFF005df2),size: 15,
                     ),
                     onPressed: () {})),
           ],
@@ -218,7 +231,7 @@ class _AddHabitState extends State<AddHabit> {
           children: <Widget>[
             Container(
                 height: 40,
-                width: 120,
+                width: 100,
                 margin: EdgeInsets.only(left: 20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -230,7 +243,7 @@ class _AddHabitState extends State<AddHabit> {
                 )),
             Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                margin: EdgeInsets.symmetric(horizontal: 15.0),
                 child: Divider(
                   thickness: 1,
                   color: Colors.white,
@@ -239,7 +252,7 @@ class _AddHabitState extends State<AddHabit> {
             ),
             Container(
                 height: 40,
-                width: 120,
+                width: 100,
                 margin: EdgeInsets.only(right: 20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -259,14 +272,26 @@ class _AddHabitState extends State<AddHabit> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _icons
-              .asMap()
-              .entries
-              .map((MapEntry map) => _buildIcon(map.key))
-              .toList(),
-        ),
+        Column(
+          children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: _icons
+                .asMap()
+                .entries
+                .map((MapEntry map) => _buildIcon(map.key,_icons))
+                .toList(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: _icon2
+                .asMap()
+                .entries
+                .map((MapEntry map) => _buildIcon(map.key,_icon2))
+                .toList(),
+          ),
+        ],),
+
         Container(
           alignment: Alignment.topLeft,
           margin: EdgeInsets.only(left: 20, top: 20, bottom: 10),
@@ -324,10 +349,11 @@ class _AddHabitState extends State<AddHabit> {
     );
   }
 
-  Widget _buildIcon(int index) {
+  Widget _buildIcon(int index, List<IconData> icons) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
       child: Icon(
-        _icons[index],
+        icons[index],
         size: 25,
         color: Colors.grey[200],
       ),
