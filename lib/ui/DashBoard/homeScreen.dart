@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: <Widget>[
         SizedBox(
-          height: 50,
+          height: 90,
         ),
         Container(
             margin: EdgeInsets.only(left: 20),
@@ -54,9 +54,3 @@ class _HomeScreenState extends State<HomeScreen> {
 //  Widget
 }
 
-//class HomeScreen extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container(color: Colors.grey[300],);
-//  }
-//}

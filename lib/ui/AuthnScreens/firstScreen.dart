@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habtrack/ui/AuthnScreens/secondScreen.dart';
 import 'package:habtrack/ui/DashBoard/settingScreen.dart';
 
@@ -64,10 +66,13 @@ class _AuthnFirstScreenState extends State<AuthnFirstScreen> {
                 child: RaisedButton(
                   color: Colors.white,
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SecondAuthnScreen()));
+                    String name = _nameFieldController.text;
+                    if (name.isNotEmpty) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SecondAuthnScreen(name)));
+                    } else  Fluttertoast.showToast(msg: "Enter your name...", toastLength: Toast.LENGTH_LONG);
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),

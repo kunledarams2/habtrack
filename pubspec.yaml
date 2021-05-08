@@ -31,6 +31,11 @@ dependencies:
   curved_navigation_bar: ^0.3.3
   font_awesome_flutter: ^8.8.1
   flutter_icons: ^1.1.0
+  firebase_core: any
+  firebase_auth: "^0.20.1"
+  firebase_database: "^6.0.0"
+  fluttertoast: ^4.0.1
+
 
 dev_dependencies:
   flutter_test:
