@@ -35,6 +35,8 @@ dependencies:
   firebase_auth: "^0.20.1"
   firebase_database: "^6.0.0"
   fluttertoast: ^4.0.1
+  intl: ^0.16.1
+  flutter_cupertino_date_picker: ^1.0.26+2
 
 
 dev_dependencies:
