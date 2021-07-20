@@ -5,6 +5,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habtrack/customizeFonts/my_flutter_app_icons.dart';
+import 'package:habtrack/data/habit_item.dart';
+import 'package:habtrack/database/localDatabaseUtils.dart';
 import 'package:intl/intl.dart';
 
 import '../dashBoard.dart';
@@ -24,6 +26,7 @@ class IconSelect {
 class _AddHabitState extends State<AddHabit> {
   List<IconSelect> habitIcon = new List();
   List<IconSelect> habitIcon2 = new List();
+  var db = new DataBaseHelper();
 
   @override
   void didChangeDependencies() {
@@ -83,6 +86,13 @@ class _AddHabitState extends State<AddHabit> {
   bool visible = false;
   bool isHabitWeekly = false;
   var value;
+  var _habitEditController = TextEditingController();
+  var _iconSelected;
+  var _iconFamilySelected;
+  var _colorSelected;
+  var _habitType = "Daily";
+  var _iconPackageName;
+  var _habitDuration;
 
   @override
   void initState() {
@@ -109,7 +119,7 @@ class _AddHabitState extends State<AddHabit> {
               children: <Widget>[
                 IconButton(
                   icon: Icon(
-                    Icons.close,
+                   Icons.close,
                     color: Colors.white,
                   ),
                   onPressed: () {
@@ -121,7 +131,7 @@ class _AddHabitState extends State<AddHabit> {
                   color: Colors.white,*/
                 ),
                 SizedBox(
-                  width: 95,
+                  width: 50,
                 ),
                 Container(
 //                  padding: EdgeInsets.symmetric(horizontal: 10),
@@ -145,6 +155,7 @@ class _AddHabitState extends State<AddHabit> {
 //              padding: EdgeInsets.all(20),
 
                     child: TextField(
+                      controller: _habitEditController,
                       cursorColor: Colors.white,
 //              controller: _nameFieldController,
                       style: TextStyle(
@@ -182,18 +193,21 @@ class _AddHabitState extends State<AddHabit> {
                           onPressed: () {
                             setState(() {
                               isHabitWeekly = false;
+                              _habitType = "Daily";
                             });
                           },
                           child: Text(
                             "Daily",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
+                                color:
+                                    isHabitWeekly ? Colors.grey : Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "AvertaStd"),
                           ),
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
-                          color: isHabitWeekly? Colors.white : Colors.grey,
+                          color: isHabitWeekly ? Colors.white24 : Colors.white,
                         ),
                       ),
                       Container(
@@ -202,18 +216,21 @@ class _AddHabitState extends State<AddHabit> {
                           onPressed: () {
                             setState(() {
                               isHabitWeekly = true;
+                              _habitType = "Weekly";
                             });
                           },
                           child: Text(
                             "Weekly",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
+                                color:
+                                    isHabitWeekly ? Colors.black : Colors.grey,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "AvertaStd"),
                           ),
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
-                          color: Colors.white,
+                          color: isHabitWeekly ? Colors.white : Colors.white24,
                         ),
                       )
                     ],
@@ -266,206 +283,13 @@ class _AddHabitState extends State<AddHabit> {
         SizedBox(
           height: 10,
         ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: EdgeInsets.only(left: 20),
-          child: Text(
-            "How many times a day?",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
+        _habitCounterContainer(),
         SizedBox(
           height: 20,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              height: 30,
-              width: 30,
-              margin: EdgeInsets.only(left: 20),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Colors.white),
-              child: IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: Color(0xFF005df2),
-                    size: 15.0,
-                  ),
-                  onPressed: () {
-                    _decrementHabitTimeDay();
-                  }),
-            ),
-            Text(
-              "$timeCounter Time",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            Container(
-                height: 30,
-                width: 30,
-                margin: EdgeInsets.only(right: 20),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    color: Colors.white),
-                child: IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      color: Color(0xFF005df2),
-                      size: 15,
-                    ),
-                    onPressed: () {
-                      _incrementHabitTimeDay();
-                    })),
-          ],
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: EdgeInsets.only(left: 20, top: 20),
-          child: Text(
-            "What is the duration of this habit?",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Text(
-                "Start Date",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Text(
-                "End Date",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-                height: 40,
-                width: 120,
-                margin: EdgeInsets.only(left: 20),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: Colors.white),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: TextField(
-                    controller: _startDateController,
-                    focusNode: AlwaysDisabledFocusNode(),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "May, 12 2020",
-                      hintStyle: TextStyle(height: 1.2),
-                    ),
-                    onTap: () {
-                      _selectedDate(context, _startDateController);
-                    },
-                    /*       "12-06-2020",
-                    style: TextStyle(height: 2.2),
-                    textAlign: TextAlign.center,*/
-                  ),
-                )),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15.0),
-                child: Divider(
-                  thickness: 1,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Container(
-                height: 40,
-                width: 120,
-                margin: EdgeInsets.only(right: 20),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color: Colors.white),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                  child: TextField(
-                    controller: _endDateController,
-                    onTap: () {
-                      _selectedDate(context, _endDateController);
-                    },
-                    focusNode: AlwaysDisabledFocusNode(),
-                    decoration: InputDecoration(
-                        hintText: "May, 20, 2021",
-                        hintStyle: TextStyle(height: 1.2),
-                        border: InputBorder.none),
-                  ),
-                )),
-          ],
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          margin: EdgeInsets.only(left: 20, top: 40, bottom: 10),
-          child: Text(
-            "Select an icon",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-        SingleChildScrollView(
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                _buildGridBuild(context),
-                /* Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: _icons
-                      .asMap()
-                      .entries
-                      .map((MapEntry map) =>
-                          _buildIcon(map.key, _icons, context))
-                      .toList(),
-                ),*/
-                /*Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: _icon2
-                      .asMap()
-                      .entries
-                      .map((MapEntry map) =>
-                          _buildIcon(map.key, _icon2, context))
-                      .toList(),
-                ),*/
-              ],
-            ),
-          ),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          margin: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-          child: Text(
-            "Select color",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-        SingleChildScrollView(
-            child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            _buildColor(context),
-          ],
-        )),
+        _habitDurationContainer(),
+        _habitIconContainer(),
+        _habitColorContainer(),
         Container(
           alignment: Alignment.topLeft,
           margin: EdgeInsets.only(left: 20, top: 30, bottom: 10),
@@ -511,7 +335,9 @@ class _AddHabitState extends State<AddHabit> {
           margin: EdgeInsets.symmetric(horizontal: 40.0),
           child: RaisedButton(
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              _handleSaveHabit();
+            },
             child: Text(
               "Complete",
               style: TextStyle(
@@ -526,6 +352,238 @@ class _AddHabitState extends State<AddHabit> {
         SizedBox(
           height: 20,
         ),
+      ],
+    );
+  }
+
+  Widget _habitCounterContainer() {
+    return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.only(left: 20),
+          child: Text(
+            "How many times a day?",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              height: 30,
+              width: 30,
+              margin: EdgeInsets.only(left: 20),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white),
+              child: IconButton(
+                  icon: Icon(
+                    Icons.remove,
+                    color: Color(0xFF005df2),
+                    size: 15.0,
+                  ),
+                  onPressed: () {
+                    _decrementHabitTimeDay();
+                  }),
+            ),
+            Text(
+              "$timeCounter Time(s)",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            Container(
+                height: 30,
+                width: 30,
+                margin: EdgeInsets.only(right: 20),
+                /*decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    color: Colors.white),*/
+                child: RawMaterialButton(
+                    child: Icon(
+                      Icons.add,
+                      color: Color(0xFF005df2),
+                      size: 15,
+                    ),
+                    elevation: 2.0,
+                    shape: CircleBorder(),
+                    fillColor: Colors.white,
+                    onPressed: () {
+                      _incrementHabitTimeDay();
+                    })),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _habitDurationContainer() {
+    return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.only(left: 20, top: 20),
+          child: Text(
+            "What is the duration of this habit?",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Text(
+                "Start Date",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Text(
+                "End Date",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Container(
+                height: 40,
+                width: 120,
+                margin: EdgeInsets.only(left: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    color: Colors.white),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    controller: _startDateController,
+                    focusNode: AlwaysDisabledFocusNode(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "DD-MM-yyyy",
+                      hintStyle: TextStyle(height: 1.2),
+                    ),
+                    onTap: () {
+                      _selectedDate(context, _startDateController);
+                    },
+                    /*       "12-06-2020",
+                    style: TextStyle(height: 2.2),
+                    textAlign: TextAlign.center,*/
+                  ),
+                )),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Container(
+                height: 40,
+                width: 120,
+                margin: EdgeInsets.only(right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    color: Colors.white),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  // padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: TextField(
+                    controller: _endDateController,
+                    onTap: () {
+                      _selectedDate(context, _endDateController);
+                    },
+                    focusNode: AlwaysDisabledFocusNode(),
+                    decoration: InputDecoration(
+                        hintText: "DD-MM-yyyy",
+                        hintStyle: TextStyle(height: 1.2),
+                        border: InputBorder.none),
+                  ),
+                )),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _habitIconContainer() {
+    return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.topLeft,
+          margin: EdgeInsets.only(
+            left: 20,
+            top: 40,
+          ),
+          child: Text(
+            "Select an icon",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+        SingleChildScrollView(
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                _buildGridBuild(context),
+                /* Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: _icons
+                      .asMap()
+                      .entries
+                      .map((MapEntry map) =>
+                          _buildIcon(map.key, _icons, context))
+                      .toList(),
+                ),*/
+                /*Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: _icon2
+                      .asMap()
+                      .entries
+                      .map((MapEntry map) =>
+                          _buildIcon(map.key, _icon2, context))
+                      .toList(),
+                ),*/
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _habitColorContainer() {
+    return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.topLeft,
+          margin: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+          child: Text(
+            "Select color",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+        SingleChildScrollView(
+            child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            _buildColor(context),
+          ],
+        ))
       ],
     );
   }
@@ -623,7 +681,12 @@ class _AddHabitState extends State<AddHabit> {
               onTap: () {
                 setState(() {
                   isIconSelected = index;
-                  print(index);
+                  _iconSelected = habitIcon[index].icon.codePoint.toString();
+                  _iconFamilySelected = habitIcon[index].icon.fontFamily;
+                  _iconPackageName =habitIcon[index].icon.fontPackage;
+                  // Fluttertoast.showToast(msg: "codePoint: $_iconSelected \n family: ${habitIcon[index].icon.fontFamily}", toastLength: Toast.LENGTH_LONG);
+                  print(
+                      "codePoint: $_iconSelected \n family: ${habitIcon[index].icon.fontFamily} \n package: ${habitIcon[index].icon.fontPackage}");
                 });
               },
               child: Icon(
@@ -652,6 +715,7 @@ class _AddHabitState extends State<AddHabit> {
                   onTap: () {
                     setState(() {
                       isColorSelected = index;
+                      _colorSelected = _colors[index].value.toString();
                     });
                   },
                   child: Container(
@@ -724,11 +788,11 @@ class _AddHabitState extends State<AddHabit> {
                         Navigator.pop(context);
                         setState(() {
                           value = DateFormat('h:mm a').format(dateTime);
-                          Fluttertoast.showToast(
+                          /* Fluttertoast.showToast(
                               msg: value.toString(),
-                              toastLength: Toast.LENGTH_LONG);
+                              toastLength: Toast.LENGTH_LONG);*/
+                          visible = true;
                         });
-                        visible = true;
                       },
                       child: Text(
                         "Confirm",
@@ -799,10 +863,65 @@ class _AddHabitState extends State<AddHabit> {
     if (dateTime != null) {
       _selectDate = dateTime;
       textEditingController
-        ..text = DateFormat.yMMMd().format(_selectDate)
+        ..text = DateFormat('yyyy-MM-dd').format(_selectDate)
         ..selection = TextSelection.fromPosition(TextPosition(
             offset: textEditingController.text.length,
             affinity: TextAffinity.upstream));
+    }
+  }
+
+  _getDuration(){
+
+    DateTime dateTimeStartAt = DateTime.parse(_startDateController.text);
+    DateTime dateTimeEndAt = DateTime.parse(_endDateController.text);
+    final differenceInDays = dateTimeEndAt.difference(dateTimeStartAt).inDays;
+    _habitDuration = differenceInDays  * timeCounter;
+    print("Habit_duration: $_habitDuration");
+  }
+
+  Future _handleSaveHabit() async {
+    if (timeCounter == 0) {
+      Fluttertoast.showToast(
+          msg: "Habit required count can't be zero...",
+          toastLength: Toast.LENGTH_LONG);
+    } else if (_habitEditController.text.toString().isEmpty) {
+      Fluttertoast.showToast(
+          msg: "Habit name is required...", toastLength: Toast.LENGTH_LONG);
+    } else if (_iconSelected == null) {
+      Fluttertoast.showToast(
+          msg: "Habit name is required...", toastLength: Toast.LENGTH_LONG);
+    } else if (_iconFamilySelected == null) {
+      Fluttertoast.showToast(
+          msg: "Habit name is required...", toastLength: Toast.LENGTH_LONG);
+    } else {
+      _getDuration();
+      var habitItem = new HabitItem(
+          _habitEditController.text.toString(),
+          _iconSelected,
+          _colorSelected,
+          _habitType,
+          timeCounter,
+          _startDateController.text.toString(),
+          _endDateController.text.toString(),
+          _iconFamilySelected,
+          _iconPackageName);
+      var result = await db.saveHabit(habitItem);
+      if (result == 0) {
+        Fluttertoast.showToast(
+            msg: "Something went wrong when saving your habit...",
+            toastLength: Toast.LENGTH_LONG);
+      } else {
+        var myHabit = await db.getAllHabit();
+        for (int i = 0; i < myHabit.length; i++) {
+          HabitItem habitItem = HabitItem.map(myHabit[i]);
+
+          print("myColor:-_--__-_-_-${habitItem.habitColor}");
+        }
+        Fluttertoast.showToast(
+            msg: "Save successfully...", toastLength: Toast.LENGTH_LONG);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => DashBoard()));
+      }
     }
   }
 }

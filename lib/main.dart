@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:habtrack/ui/onboardingScreen.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -30,18 +31,32 @@ class MyApp extends StatelessWidget {
             home: OnBoardScreen(),
           );
         }
-        return loading();
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+//      theme: ThemeData(fontFamily: "AveriaSerifLibre"),
+          theme: ThemeData(
+              inputDecorationTheme: InputDecorationTheme(
+                  border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white70))),
+              fontFamily: "AvertaStd"),
+
+          home: OnBoardScreen(),
+        );
       },
     );
   }
 
   Widget somethingWentWrong() {
-    return Container();
+    return Container(
+      child: Text("data"),
+    );
   }
 
-  Widget loading() {
-    return Container();
-  }
+/* Widget loading() {
+    return Container(
+      child: Text("data"),
+    );
+  }*/
 }
 
 /*

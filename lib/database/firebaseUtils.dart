@@ -40,6 +40,9 @@ class FirebaseUtils {
       "email": user.email,
     }).then((_) => print("Use added successful"));
   }
+  getUserDetail(){
+
+  }
 
   void deleteUser(Users user) async {
     _userRef.child(user.id).remove().then((_) => print("user deleted "));

@@ -43,6 +43,12 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
   @override
   void initState() {
     super.initState();
+    _auth.authStateChanges().listen((User user) {
+      if (user !=null){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => DashBoard()));
+      }
+    });
  /*   if (_auth.currentUser != null) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => DashBoard()));
@@ -67,8 +73,9 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
 
   // ignore: missing_return
   Widget build(BuildContext context) {
+    return appBody();
 
-    _auth.authStateChanges().listen((User user) {
+    /*  _auth.authStateChanges().listen((User user) {
       if (user == null) {
 
          appBody();
@@ -79,7 +86,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             MaterialPageRoute(builder: (context) => DashBoard()));
       }
     });
-    /*return FutureBuilder(
+    return FutureBuilder(
       future: _initialization,
       builder: (context, snapShot) {
         if (snapShot.hasError) {
